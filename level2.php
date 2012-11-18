@@ -5,11 +5,12 @@ if (!$link) {
     die('Not connected : ' . mysql_error());
 }
 
-// make foo the current db
+// make langstock the current db
 $db_selected = mysql_select_db('langstock', $link);
 if (!$db_selected) {
-    die ('Can\'t use the db : ' . mysql_error());
+    die ('fuuuuuu : ' . mysql_error());
 }
+
 // Create a stream
 $opts = array(
   'http'=>array(
@@ -18,7 +19,11 @@ $opts = array(
               "Cookie: foo=bar\r\n"
   )
 );
-
+$loop=0;
+//almost infinite loop
+while ($loop <= 30){
+  //set no max limit on execution time
+  set_time_limit(0);
 $context = stream_context_create($opts);
 	$symbols = mysql_query("SELECT `symbol` FROM symbols");
 	while($row = mysql_fetch_array($symbols)) {
@@ -26,11 +31,22 @@ $insertsym = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s='.$row['symbol']
 // Open the file using the HTTP headers set above
 $file = file_get_contents($insertsym, false, $context);
 //echo $file;
-preg_match_all('~split(.*?)GMT~',$file,$urldata);
-//print_r($urldata[0]);
+//loop for each term
+$lp = 0;
+while ($lp <= 2) {
 $i=0;
+if ($lp == 0){
+  preg_match_all('~split(.*?)GMT~',$file,$urldata);
+  }
+if ($lp == 1){
+  preg_match_all('~outperform(.*?)GMT~',$file,$urldata);
+  }
+if ($lp == 2){
+  preg_match_all('~overperform(.*?)GMT~',$file,$urldata);
+  }
 foreach ($urldata as $key => $value) {
 foreach ($value as $ree => $bar) {
+
 	$test = substr($bar, -3, 3);
 if ($test != "GMT") {
 	$bar = $bar . "GMT";
@@ -72,7 +88,7 @@ $arr[$i] = $unixcool;
   $i => $unixcool,
   );*/
 $i++;
-}}
+}} //end foreachs
 //print_r($arr);
 if ($i == 0){
 $minarr = 0;
@@ -96,6 +112,9 @@ mysql_query("UPDATE symbols SET flag=1 WHERE symbol='$searchsymbol'");
 
 }
 echo '<br><br>';
+$lp++;
+}
 } //end while
+$loop++;
+}
 ?>
-
