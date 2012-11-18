@@ -25,9 +25,21 @@ while ($loop <= 1){
   //set no max limit on execution time
   set_time_limit(0);
 $context = stream_context_create($opts);
-	$symbols = mysql_query("SELECT `symbol` FROM symbols");
-	while($row = mysql_fetch_array($symbols)) {
-$insertsym = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s='.$row['symbol'].'&region=US&lang=en-US';
+//every aplha search by symbol
+$string = 'a';
+
+function combinations($size) {
+    $string = str_repeat('a',$size);
+    $endLoopTest = str_repeat('z',$size);
+    $endLoopTest++;
+    while ($string != $endLoopTest) {
+        $shmo = $string++;
+    }
+}
+while ($string != 'aaaaa') {
+    $shmo = $string++;
+
+$insertsym = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s='.$shmo.'&region=US&lang=en-US';
 // Open the file using the HTTP headers set above
 $file = file_get_contents($insertsym, false, $context);
 //echo $file;
@@ -109,15 +121,16 @@ $bnow = $bnow + 29625;
 
 
 if ($minarr >= $bnow && $newscount <= 4){
-$searchsymbol = $row['symbol'];
+//$searchsymbol = $row['symbol'];
 
-mysql_query("UPDATE symbols SET flag=1 WHERE symbol='$searchsymbol'");
-
+//mysql_query("UPDATE symbols SET flag=1 WHERE symbol='$searchsymbol'");
+echo $shmo;
+echo 'lalalala';
 }
-echo '<br><br>';
+//echo '<br><br>';
 $lp++;
 }
-} //end while
+}
 $loop++;
 }
 ?>
