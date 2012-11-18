@@ -26,7 +26,7 @@ $insertsym = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s='.$row['symbol']
 // Open the file using the HTTP headers set above
 $file = file_get_contents($insertsym, false, $context);
 //echo $file;
-preg_match_all('~radar(.*?)GMT~',$file,$urldata);
+preg_match_all('~split(.*?)GMT~',$file,$urldata);
 //print_r($urldata[0]);
 $i=0;
 foreach ($urldata as $key => $value) {
@@ -63,14 +63,25 @@ $year = substr($cool, -17, 4);
 $year = (int)$year;
 $unixcool = mktime($hour,$minute,$second,$gmonth,$day,$year);
 $unixcool = $unixcool + 7200;
+
 //echo $unixcool . '<br>';
 // find the first news article
 //create that arr since we are in foreach
 $arr[$i] = $unixcool;
+/*$arr = array(
+  $i => $unixcool,
+  );*/
 $i++;
-}}}
+}}
 //print_r($arr);
-$minarr =  min($arr);
+if ($i == 0){
+$minarr = 0;
+}
+else {
+  $minarr =  min($arr);
+}
+//else {$minarr = $unixcool;}
+echo $minarr.'<br>';
 $now = date_default_timezone_set('Etc/GMT+12'); 
 //echo $now. '<br>';
 $bnow = mktime($now);
@@ -79,7 +90,12 @@ $bnow = $bnow + 29625;
 //$cnow = $bnow + 
 echo $bnow. '<br>';
 if ($minarr >= $bnow){
-echo 'yo momma';
+$searchsymbol = $row['symbol'];
+
+mysql_query("UPDATE symbols SET flag=1 WHERE symbol='$searchsymbol'");
+
 }
+echo '<br><br>';
+} //end while
 ?>
 
