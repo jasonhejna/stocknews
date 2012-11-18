@@ -21,7 +21,7 @@ $opts = array(
 );
 $loop=0;
 //almost infinite loop
-while ($loop <= 30){
+while ($loop <= 1){
   //set no max limit on execution time
   set_time_limit(0);
 $context = stream_context_create($opts);
@@ -94,18 +94,21 @@ if ($i == 0){
 $minarr = 0;
 }
 else {
+  $newscount = array_count_values($arr);
   $minarr =  min($arr);
 }
 //else {$minarr = $unixcool;}
-echo $minarr.'<br>';
+//echo $minarr.'<br>';
 $now = date_default_timezone_set('Etc/GMT+12'); 
 //echo $now. '<br>';
 $bnow = mktime($now);
 //39625 is now, this is slow by 3 hours
 $bnow = $bnow + 29625;
 //$cnow = $bnow + 
-echo $bnow. '<br>';
-if ($minarr >= $bnow){
+//echo $bnow. '<br>';
+
+
+if ($minarr >= $bnow && $newscount <= 4){
 $searchsymbol = $row['symbol'];
 
 mysql_query("UPDATE symbols SET flag=1 WHERE symbol='$searchsymbol'");
