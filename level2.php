@@ -1,4 +1,5 @@
 <?php
+  set_time_limit(0);
 //el database
 $link = mysql_connect('localhost', 'angry_monster', 'goblins33');
 if (!$link) {
@@ -20,16 +21,22 @@ $opts = array(
   )
 );
 $loop=0;
-//almost infinite loop
-while ($loop <= 1){
+//almost infinite loop 475254
+while ($loop <= 100){
+  echo '.';
   //set no max limit on execution time
-  set_time_limit(0);
+
 $context = stream_context_create($opts);
-	$symbols = mysql_query("SELECT `symbol` FROM symbols");
-	while($row = mysql_fetch_array($symbols)) {
-$insertsym = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s='.$row['symbol'].'&region=US&lang=en-US';
+	$fuu = mysql_query("SELECT `symbol` FROM levelw WHERE id='".$loop."'");
+	//while($row = mysql_fetch_array($fuu)) {
+//$searchsymbol = $row['symbol'];
+//echo $searchsymbol.'<br>';
+$insertsym = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s='.$fuu.'&region=US&lang=en-US';
 // Open the file using the HTTP headers set above
 $file = file_get_contents($insertsym, false, $context);
+$sweeti = 0;
+preg_match_all('~RSS feed not found~',$file,$sweeti);
+if ($sweeti == 0) {
 //echo $file;
 //loop for each term
 $lp = 0;
@@ -42,7 +49,7 @@ if ($lp == 1){
   preg_match_all('~outperform(.*?)GMT~',$file,$urldata);
   }
 if ($lp == 2){
-  preg_match_all('~overperform(.*?)GMT~',$file,$urldata);
+  preg_match_all('~Clinical Trial(.*?)GMT~',$file,$urldata);
   }
 foreach ($urldata as $key => $value) {
 foreach ($value as $ree => $bar) {
@@ -99,25 +106,25 @@ else {
 }
 //else {$minarr = $unixcool;}
 //echo $minarr.'<br>';
-$now = date_default_timezone_set('Etc/GMT+12'); 
-//echo $now. '<br>';
+$now = date_default_timezone_set('GMT'); 
 $bnow = mktime($now);
 //39625 is now, this is slow by 3 hours
-$bnow = $bnow + 29625;
+$bnow = $bnow - 29625;
 //$cnow = $bnow + 
 //echo $bnow. '<br>';
 
 
-if ($minarr >= $bnow && $newscount <= 4){
-$searchsymbol = $row['symbol'];
+if ($minarr > $bnow){
 
-mysql_query("UPDATE symbols SET flag=1 WHERE symbol='$searchsymbol'");
+$one = 1;
+mysql_query("UPDATE levelw SET flag='$one' WHERE sym='$fuu'");
 
 }
-echo '<br><br>';
 $lp++;
 }
-} //end while
+}
+//} //end while
 $loop++;
 }
+echo 'success';
 ?>
