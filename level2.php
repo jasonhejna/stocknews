@@ -20,16 +20,14 @@ $opts = array(
               "Cookie: foo=bar\r\n"
   )
 );
-//$loop=1;
-//almost infinite loop 475254
-//while ($loop <= 3){
-  //$strloop = var_to_str($loop);
-  //$loops = $loop;
-  //echo '.';
-  //set no max limit on execution time
+  $fml=0;
+  $limit = 11000;
+  $doslim = 12000;
+while ($fml <= 3){
 
+$fml++;
 $context = stream_context_create($opts);
-  $result_bro = mysql_query("SELECT `sym` FROM levelw LIMIT 30,40");
+  $result_bro = mysql_query("SELECT `sym` FROM levelw LIMIT $limit,$doslim");
   while($row = mysql_fetch_array($result_bro)) {
 //echo $searchsymbol.'<br>';
     $sheldor = $row['sym'];
@@ -129,7 +127,7 @@ $bnow = $bnow - 48600;
 if ($minarr > $bnow){
 
 $one = 1;
-mysql_query("UPDATE levelw SET flag='$one' WHERE sym='$rower'");
+mysql_query("UPDATE levelw SET flag='$one' WHERE sym='$sheldor'");
 
 }
 $lp++;
@@ -137,6 +135,9 @@ $lp++;
 
 //} //end while
 //$loop++;
+}
+$limit = $limit + 1000;
+$doslim = $limit + 2000;
 }
 echo 'success';
 ?>

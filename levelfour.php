@@ -5,4 +5,5 @@ include 'coneczinc.php';
 	while($row = mysql_fetch_array($nice)) {
 		print_r($row);
 	}
+	echo 'done';
 ?>
