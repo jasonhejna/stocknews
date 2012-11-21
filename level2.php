@@ -20,23 +20,33 @@ $opts = array(
               "Cookie: foo=bar\r\n"
   )
 );
-$loop=0;
+//$loop=1;
 //almost infinite loop 475254
-while ($loop <= 100){
-  echo '.';
+//while ($loop <= 3){
+  //$strloop = var_to_str($loop);
+  //$loops = $loop;
+  //echo '.';
   //set no max limit on execution time
 
 $context = stream_context_create($opts);
-	$fuu = mysql_query("SELECT `symbol` FROM levelw WHERE id='".$loop."'");
-	//while($row = mysql_fetch_array($fuu)) {
-//$searchsymbol = $row['symbol'];
+  $result_bro = mysql_query("SELECT `sym` FROM levelw LIMIT 30,40");
+  while($row = mysql_fetch_array($result_bro)) {
 //echo $searchsymbol.'<br>';
-$insertsym = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s='.$fuu.'&region=US&lang=en-US';
+    $sheldor = $row['sym'];
+    $sheldor = rtrim($sheldor);
+    //echo $sheldor;
+  //echo $rower;
+$strone = "http://feeds.finance.yahoo.com/rss/2.0/headline?s=";
+$strtwo = "&amp;";
+$strthree = "region=US&lang=en-US";
+$insertsym = "{$strone}{$sheldor}{$strtwo}{$strthree}";
+//echo $insertsym . '<br>';
+//echo $rower;
 // Open the file using the HTTP headers set above
 $file = file_get_contents($insertsym, false, $context);
-$sweeti = 0;
+/*$sweeti = 0;
 preg_match_all('~RSS feed not found~',$file,$sweeti);
-if ($sweeti == 0) {
+if ($sweeti == 0) {*/
 //echo $file;
 //loop for each term
 $lp = 0;
@@ -61,12 +71,14 @@ if ($test != "GMT") {
 $cool = substr($bar, -29);
 //echo $cool . '<br>';
 $hour = substr($cool, -12, 2);
-
+//echo $hour . '<br>';
 $minute = substr($cool, -9, 2);
-
+//echo $minute . '<br>';
 $second = substr($cool, -6, 2);
 $second = (int)$second;
+//echo $second . '<br>';
 $month = substr($cool, -21, 3);
+//echo $month . '<br>';
 if ($month == "Jan"){$gmonth=(int)1;}
 if ($month == "Feb"){$gmonth=(int)2;}
 if ($month == "Mar"){$gmonth=(int)2;}
@@ -79,7 +91,7 @@ if ($month == "Sep"){$gmonth=(int)9;}
 if ($month == "Oct"){$gmonth=(int)10;}
 if ($month == "Nov"){$gmonth=(int)11;}
 if ($month == "Dec"){$gmonth=(int)12;}
-
+//echo $gmonth. '<br>';
 $day = substr($cool, -24, 2);
 $day = (int)$day;
 $year = substr($cool, -17, 4);
@@ -108,8 +120,8 @@ else {
 //echo $minarr.'<br>';
 $now = date_default_timezone_set('GMT'); 
 $bnow = mktime($now);
-//39625 is now, this is slow by 3 hours
-$bnow = $bnow - 29625;
+//13.5 hours less than now
+$bnow = $bnow - 48600;
 //$cnow = $bnow + 
 //echo $bnow. '<br>';
 
@@ -117,14 +129,14 @@ $bnow = $bnow - 29625;
 if ($minarr > $bnow){
 
 $one = 1;
-mysql_query("UPDATE levelw SET flag='$one' WHERE sym='$fuu'");
+mysql_query("UPDATE levelw SET flag='$one' WHERE sym='$rower'");
 
 }
 $lp++;
 }
-}
+
 //} //end while
-$loop++;
+//$loop++;
 }
 echo 'success';
 ?>
